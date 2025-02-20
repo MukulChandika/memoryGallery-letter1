@@ -1,0 +1,365 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Love Letter to You</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Dancing+Script:wght@700&family=Playfair+Display:ital@0;1&display=swap');
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            min-height: 100vh;
+            background: #fff1f2;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-family: 'Playfair Display', serif;
+            padding: 20px;
+            overflow-x: hidden;
+        }
+
+        .envelope {
+            position: relative;
+            width: 90%;
+            max-width: 800px;
+            height: 600px;
+            cursor: pointer;
+            perspective: 1000px;
+            transition: transform 0.8s ease, opacity 0.8s ease;
+        }
+
+        .envelope.open {
+            transform: translateX(200%) rotate(20deg);
+            opacity: 0;
+            pointer-events: none;
+        }
+
+        .envelope-flap {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: #ff4b7d;
+            clip-path: polygon(0 0, 50% 50%, 100% 0);
+            transform-origin: top;
+            transition: transform 0.5s ease;
+            z-index: 3;
+        }
+
+        .envelope.open .envelope-flap {
+            transform: rotateX(180deg);
+        }
+
+        .envelope-back {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: #ff6b6b;
+            border-radius: 20px;
+            z-index: 1;
+        }
+
+        .letter-container {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            width: 90%;
+            max-width: 800px;
+            max-height: 90vh;
+            background: linear-gradient(to right bottom, #fff1f2, #fff);
+            padding: 40px;
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(220, 38, 38, 0.2);
+            transform: translate(-50%, -50%) scale(0.95);
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.8s ease;
+            z-index: 2;
+            border: 2px solid rgba(220, 38, 38, 0.2);
+            overflow-y: auto;
+            /* Smooth scrolling */
+            scroll-behavior: smooth;
+        }
+
+        /* Customize scrollbar */
+        .letter-container::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        .letter-container::-webkit-scrollbar-track {
+            background: rgba(220, 38, 38, 0.1);
+            border-radius: 4px;
+        }
+
+        .letter-container::-webkit-scrollbar-thumb {
+            background: rgba(220, 38, 38, 0.3);
+            border-radius: 4px;
+        }
+
+        .letter-container::-webkit-scrollbar-thumb:hover {
+            background: rgba(220, 38, 38, 0.5);
+        }
+
+        .envelope.open + .letter-container {
+            transform: translate(-50%, -50%) scale(1);
+            opacity: 1;
+            visibility: visible;
+            animation: letterAppear 1s ease forwards;
+        }
+
+        .letter-container::before {
+            content: '❤️';
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            font-size: 24px;
+            opacity: 0.5;
+        }
+
+        h1 {
+            font-family: 'Dancing Script', cursive;
+            color: #dc2626;
+            font-size: 3.5rem;
+            margin-bottom: 30px;
+            text-align: center;
+            animation: fadeInDown 1s ease 0.5s both;
+            text-shadow: 2px 2px 4px rgba(220, 38, 38, 0.1);
+        }
+
+        p {
+            font-size: 1.2rem;
+            line-height: 1.8;
+            margin-bottom: 20px;
+            color: #881337;
+            opacity: 0;
+            transform: translateY(20px);
+        }
+
+        .envelope.open + .letter-container p {
+            animation: fadeInUp 0.8s ease forwards;
+        }
+
+        .envelope.open + .letter-container p:nth-child(2) { animation-delay: 0.2s; }
+        .envelope.open + .letter-container p:nth-child(3) { animation-delay: 0.4s; }
+        .envelope.open + .letter-container p:nth-child(4) { animation-delay: 0.6s; }
+        .envelope.open + .letter-container p:nth-child(5) { animation-delay: 0.8s; }
+        .envelope.open + .letter-container p:nth-child(6) { animation-delay: 1s; }
+        .envelope.open + .letter-container p:nth-child(7) { animation-delay: 1.2s; }
+        .envelope.open + .letter-container p:nth-child(8) { animation-delay: 1.4s; }
+
+        .signature {
+            font-family: 'Dancing Script', cursive;
+            font-size: 2.2rem;
+            color: #dc2626;
+            text-align: right;
+            margin-top: 40px;
+            opacity: 0;
+            transform: translateY(20px);
+        }
+
+        .envelope.open + .letter-container .signature {
+            animation: fadeInUp 0.8s ease 1.6s forwards;
+        }
+
+        .envelope-heart {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 4rem;
+            color: white;
+            z-index: 2;
+            transition: opacity 0.3s ease;
+        }
+
+        .envelope.open .envelope-heart {
+            opacity: 0;
+        }
+
+        .back-btn {
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            padding: 10px 20px;
+            background: linear-gradient(45deg, #ff4b7d, #ff6b6b);
+            color: white;
+            border: none;
+            border-radius: 25px;
+            cursor: pointer;
+            text-decoration: none;
+            z-index: 100;
+            transition: transform 0.3s ease;
+        }
+
+        .back-btn:hover {
+            transform: translateX(-5px);
+        }
+
+        .click-hint {
+            position: absolute;
+            bottom: -40px;
+            left: 50%;
+            transform: translateX(-50%);
+            color: #db2777;
+            font-family: 'Dancing Script', cursive;
+            font-size: 1.5rem;
+            opacity: 0.7;
+        }
+
+        @media (max-width: 768px) {
+            .envelope {
+                height: 400px;
+            }
+
+            .letter-container {
+                padding: 20px;
+                max-height: 85vh;
+            }
+
+            h1 {
+                font-size: 2rem;
+            }
+
+            p {
+                font-size: 1rem;
+            }
+
+            .envelope-heart {
+                font-size: 3rem;
+            }
+        }
+
+        @keyframes letterAppear {
+            0% {
+                box-shadow: 0 10px 30px rgba(220, 38, 38, 0.2);
+            }
+            100% {
+                box-shadow: 0 20px 60px rgba(220, 38, 38, 0.3);
+            }
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes fadeInDown {
+            from {
+                opacity: 0;
+                transform: translateY(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Add floating hearts */
+        .floating-hearts {
+            position: fixed;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 1;
+        }
+
+        .heart {
+            position: absolute;
+            font-size: 20px;
+            color: #dc2626;
+            opacity: 0;
+            animation: floatHeart 4s ease-in infinite;
+        }
+
+        @keyframes floatHeart {
+            0% {
+                transform: translateY(100vh) scale(0);
+                opacity: 0;
+            }
+            50% {
+                opacity: 0.8;
+            }
+            100% {
+                transform: translateY(-100px) scale(1);
+                opacity: 0;
+            }
+        }
+    </style>
+</head>
+<body>
+    <a href="index.html" class="back-btn">← Back Home</a>
+    
+    <div class="envelope">
+        <div class="envelope-flap"></div>
+        <div class="envelope-back"></div>
+        <div class="envelope-heart">❤️</div>
+        <div class="click-hint">Click to open ✨</div>
+    </div>
+
+    <div class="letter-container">
+        <h1>Krutika</h1>
+        <p>The first time we met, I never imagined you would become such an important part of my life. We met at your office, just two people trying out dating apps, but little did I know that meeting you would change everything. From that moment, life felt different—brighter, warmer, and filled with moments I never want to forget.</p>
+        
+        <p>I still smile when I think about our first time at Marine Drive, how we laughed, had pizza, talked about ourselves, and of course how I got fined ₹700 (which, by the way, you still owe me and should totally pay me back). And then there was that phase where we met every single day, those days became my favorite ones. But if there's one moment I'll cherish forever, it's when that street artist sketched us. You didn't want to do it at first, but the way your face lit up after seeing it—that was the happiest I've ever seen you, and that happiness made my whole year.</p>
+        
+        <p>Every day after work, I crave your hug, the warmth of being close to you. And even when you're a little far, just knowing you're mine makes everything feel okay. You always act like you don't like getting gifts but I know the truth, I know how much you love them even if you won't admit it.</p>
+        
+        <p>Our thing It's me roasting you and you getting roasted, pretending to be mad but deep down I know exactly how to make it up to you. And I always will.</p>
+        
+        <p>One of the things I love most about you is that you're not the typical "girly girl" yet sometimes you do little things that remind me how incredibly cute you are. You put so much effort into this relationship, more than you even realize and that means the world to me. If there's ever a girl worth fighting for, it's you.</p>
+        
+        <p>Our first fight I don't even remember it because why hold onto anything but the good. I choose to remember your smile, your laughter, and the way you make my world better just by being in it.</p>
+        
+        <p>As for the future, I don't dream of anything grand, just a peaceful life where we understand each other, grow together, and keep making each other better every single day. That's all I want.</p>
+        
+        <p>Thank you for being you, for loving me, and for making my life so incredibly special. I love you now and I'll love you always.</p>
+        
+        <div class="signature">
+            Yours forever,<br>
+            Mukul Chandika ❤️
+        </div>
+    </div>
+
+    <script>
+        const envelope = document.querySelector('.envelope');
+        function createFloatingHearts() {
+            const container = document.createElement('div');
+            container.className = 'floating-hearts';
+            document.body.appendChild(container);
+
+            function addHeart() {
+                const heart = document.createElement('div');
+                heart.className = 'heart';
+                heart.innerHTML = '❤️';
+                heart.style.left = Math.random() * 100 + 'vw';
+                container.appendChild(heart);
+
+                heart.addEventListener('animationend', () => heart.remove());
+            }
+
+            // Add hearts periodically
+            setInterval(addHeart, 300);
+        }
+
+        envelope.addEventListener('click', () => {
+            envelope.classList.add('open');
+            createFloatingHearts();
+        });
+    </script>
+</body>
+</html>

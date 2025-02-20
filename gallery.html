@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Our Memories Gallery</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Dancing+Script:wght@700&family=Poppins:wght@300;400;500&display=swap');
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            min-height: 100vh;
+            background: #1a1a2e;
+            font-family: 'Poppins', sans-serif;
+            color: white;
+            overflow-x: hidden;
+        }
+
+        .gallery-container {
+            padding: 2rem;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .memory-card {
+            position: relative;
+            height: 400px;
+            border-radius: 20px;
+            overflow: hidden;
+            cursor: pointer;
+            transition: transform 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .memory-card:hover {
+            transform: scale(1.02);
+        }
+
+        .card-front {
+            position: relative;
+            width: 100%;
+            height: 100%;
+        }
+
+        .card-front img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            border-radius: 20px;
+        }
+
+        .memory-text {
+            position: absolute;
+            bottom: -100%;
+            left: 0;
+            width: 100%;
+            padding: 30px;
+            background: linear-gradient(to right, 
+                rgba(0, 0, 0, 0.8), 
+                rgba(255, 0, 0, 0.2), 
+                rgba(0, 0, 0, 0.8));
+            font-family: 'Dancing Script', cursive;
+            font-size: 2rem;
+            color: white;
+            text-align: center;
+            transition: bottom 0.4s ease;
+        }
+
+        .memory-card:hover .memory-text {
+            bottom: 0;
+        }
+
+        .back-btn {
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            padding: 10px 20px;
+            background: linear-gradient(45deg, #ff4b7d, #ff6b6b);
+            color: white;
+            border: none;
+            border-radius: 25px;
+            cursor: pointer;
+            text-decoration: none;
+            z-index: 100;
+            transition: transform 0.3s ease;
+        }
+
+        .back-btn:hover {
+            transform: translateX(-5px);
+        }
+
+        @media (max-width: 768px) {
+            .gallery-container {
+                padding: 1rem;
+                gap: 1rem;
+            }
+
+            .memory-card {
+                height: 300px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <a href="index.html" class="back-btn">← Back Home</a>
+    <div class="gallery-container">
+        <!-- Memory cards will be added here by JavaScript -->
+    </div>
+
+<script>
+        const memories = [
+            { image: 'images/pic1.jpg', text: 'first time i asked for two braids' },
+            { image: 'images/pic2.jpg', text: 'Our first pic together' },
+            { image: 'images/pic3.jpg', text: 'You look fucking cute' },
+            { image: 'images/pic4.jpg', text: 'our first time drinking together' },
+            { image: 'images/pic5.jpg', text: 'the first time  i saw you in one piece' },
+            { image: 'images/pic6.jpg', text: 'you didnt play cricket and you wore dress you lil shit' },
+            { image: 'images/pic7.jpg', text: 'you were so so so happy that day' },
+            { image: 'images/pic8.jpg', text: 'you only look cute in the drawing beetch' },
+            { image: 'images/pic9.jpg', text: 'Sun bindi ah....' },
+            { image: 'images/pic10.jpg', text: 'kissable lips you got there' },
+            { image: 'images/pic11.jpg', text: 'I am too damn shy to tell you this' },
+            { image: 'images/pic12.jpg', text: 'Learn how to pose as i couple kutiya' }
+
+        ];
+
+        function createGallery() {
+            const container = document.querySelector('.gallery-container');
+            
+            memories.forEach((memory, index) => {
+                const card = document.createElement('div');
+                card.className = 'memory-card';
+                card.innerHTML = `
+                    <div class="card-front">
+                        <img src="${memory.image}" alt="Memory ${index + 1}">
+                        <p class="memory-text">${memory.text}</p>
+                    </div>
+                `;
+
+                container.appendChild(card);
+            });
+        }
+
+        createGallery();
+    </script>
+</body>
+</html>
